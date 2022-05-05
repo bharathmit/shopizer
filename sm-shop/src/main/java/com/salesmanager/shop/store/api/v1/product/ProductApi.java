@@ -151,8 +151,12 @@ public class ProductApi {
 	@ApiOperation(httpMethod = "PATCH", value = "Update product inventory", notes = "Updates product inventory", produces = "application/json", response = Void.class)
 	@ApiImplicitParams({ @ApiImplicitParam(name = "store", dataType = "string", defaultValue = "DEFAULT"),
 			@ApiImplicitParam(name = "lang", dataType = "string", defaultValue = "en") })
-	public void update(@PathVariable Long id, @Valid @RequestBody LightPersistableProduct product,
-			@ApiIgnore MerchantStore merchantStore, @ApiIgnore Language language) {
+	public void update(
+			@PathVariable Long id, 
+			@Valid @RequestBody 
+			LightPersistableProduct product,
+			@ApiIgnore MerchantStore merchantStore, 
+			@ApiIgnore Language language) {
 		productFacade.update(id, product, merchantStore, language);
 		return;
 
@@ -182,7 +186,8 @@ public class ProductApi {
 	@ResponseBody
 	@ApiImplicitParams({ @ApiImplicitParam(name = "store", dataType = "String", defaultValue = "DEFAULT"),
 			@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "en") })
-	public ReadableProductList list(@RequestParam(value = "lang", required = false) String lang,
+	public ReadableProductList list(
+			@RequestParam(value = "lang", required = false) String lang,
 			@RequestParam(value = "category", required = false) Long category,
 			@RequestParam(value = "name", required = false) String name,
 			@RequestParam(value = "sku", required = false) String sku,
@@ -191,6 +196,7 @@ public class ProductApi {
 			@RequestParam(value = "status", required = false) String status,
 			@RequestParam(value = "owner", required = false) Long owner,
 			@RequestParam(value = "page", required = false, defaultValue = "0") Integer page, // current
+			@RequestParam(value = "origin", required = false, defaultValue = ProductCriteria.ORIGIN_SHOP) String origin,
 			// page
 			// 0
 			// ..
@@ -204,6 +210,8 @@ public class ProductApi {
 			HttpServletResponse response) throws Exception {
 
 		ProductCriteria criteria = new ProductCriteria();
+		
+		criteria.setOrigin(origin);
 
 		// do not use legacy pagination anymore
 		if (lang != null) {
@@ -297,6 +305,14 @@ public class ProductApi {
 		return product;
 	}
 
+	/**
+	 * Price calculation
+	 * @param id
+	 * @param variants
+	 * @param merchantStore
+	 * @param language
+	 * @return
+	 */
 	@RequestMapping(value = "/v1/product/{id}/price", method = RequestMethod.POST)
 	@ApiOperation(httpMethod = "POST", value = "Calculate product price with variants", notes = "Product price calculation from variants")
 	@ApiResponses(value = {
@@ -304,7 +320,8 @@ public class ProductApi {
 	@ResponseBody
 	@ApiImplicitParams({ @ApiImplicitParam(name = "store", dataType = "String", defaultValue = "DEFAULT"),
 			@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "en") })
-	public ReadableProductPrice price(@PathVariable final Long id, @RequestBody ProductPriceRequest variants,
+	public ReadableProductPrice price(@PathVariable final Long id, 
+			@RequestBody ProductPriceRequest variants,
 			@ApiIgnore MerchantStore merchantStore, @ApiIgnore Language language) {
 
 		return productFacade.getProductPrice(id, variants, merchantStore, language);

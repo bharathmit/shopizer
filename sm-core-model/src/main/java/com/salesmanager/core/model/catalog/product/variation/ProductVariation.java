@@ -29,7 +29,7 @@ import com.salesmanager.core.model.merchant.MerchantStore;
  * Contains possible product variations
  * 
  * color - red
- * size small
+ * size - small
  * @author carlsamson
  *
  */
@@ -53,6 +53,7 @@ public class ProductVariation extends SalesManagerEntity<Long, ProductVariation>
 	@GeneratedValue(strategy = GenerationType.TABLE, generator = "TABLE_GEN")
 	private Long id;
 	
+	/** can exist detached **/
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="MERCHANT_ID", nullable=false)
 	private MerchantStore merchantStore;
@@ -70,10 +71,6 @@ public class ProductVariation extends SalesManagerEntity<Long, ProductVariation>
     private String code;
 
 	
-/*	@ManyToOne(targetEntity = ProductAvailability.class)
-	@JoinColumn(name = "PRODUCT_AVAIL_ID", nullable = false)
-	private ProductAvailability productAvailability;*/
-	
 	@Override
 	public AuditSection getAuditSection() {
 		return auditSection;
@@ -81,7 +78,7 @@ public class ProductVariation extends SalesManagerEntity<Long, ProductVariation>
 
 	@Override
 	public void setAuditSection(AuditSection audit) {
-		this.auditSection = auditSection;
+		this.auditSection = audit;
 		
 	}
 
